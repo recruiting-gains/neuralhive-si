@@ -121,7 +121,7 @@
             <a href="#" class="text-gray-400 hover:text-honey font-medium transition">Docs</a>
         </div>
         <div class="flex items-center space-x-3 sm:space-x-4">
-            <a href="#" class="hidden sm:inline text-gray-300 hover:text-honey font-medium transition">Log in</a>
+            <a href="/app" class="text-sm sm:text-base text-gray-300 hover:text-honey font-medium transition whitespace-nowrap">Open app</a>
             <a href="#pricing" class="bg-honey text-hive-ink text-sm sm:text-base px-3 sm:px-4 py-2 rounded-lg font-semibold hover:bg-honey-light transition whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-honey-light focus-visible:ring-offset-2 focus-visible:ring-offset-hive-bg">Get Started</a>
         </div>
     </nav>
@@ -140,7 +140,7 @@
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex-1">
                         <label for="promptInput" class="sr-only">Describe your SI teammate</label>
-                        <textarea id="promptInput"
+                        <textarea id="promptInput" maxlength="1000"
                                 class="w-full h-32 p-4 bg-hive-bg/70 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-honey focus:border-transparent resize-none text-gray-200 placeholder:text-[#8B909C]"
                                 placeholder="e.g., A recruiter that screens resumes, schedules interviews, and updates my candidate tracker."></textarea>
                     </div>
@@ -160,6 +160,7 @@
                     </div>
                 </div>
                 <p id="formMessage" class="hidden mt-4 text-sm rounded-lg px-4 py-3" role="status" aria-live="polite"></p>
+                <div id="previewResult" class="hidden mt-4" aria-live="polite"></div>
             </div>
         </div>
 
@@ -328,6 +329,7 @@
             </div>
 
             <div class="max-w-md mx-auto mt-6 text-center">
+                <p class="text-sm text-gray-300 mb-3">After purchase, your license key arrives by email. Enter it at <a href="/app" class="text-honey hover:text-honey-light hover:underline">neuralhive-si.pages.dev/app</a></p>
                 <p class="text-sm text-gray-400 mb-4">Questions? Email us at <a href="mailto:launchgrid.hq@proton.me" class="text-honey hover:text-honey-light hover:underline break-all">launchgrid.hq@proton.me</a></p>
                 <a href="mailto:launchgrid.hq@proton.me?subject=NeuralHive%20Pro"
                    class="inline-block border border-honey/60 text-honey font-semibold py-2.5 px-6 rounded-lg hover:bg-honey/10 hover:border-honey hover:text-honey-light transition focus:outline-none focus-visible:ring-2 focus-visible:ring-honey focus-visible:ring-offset-2 focus-visible:ring-offset-hive-bg">Contact us</a>
@@ -337,6 +339,7 @@
 
     <footer class="border-t border-white/[0.08] mt-20 py-8 text-center text-gray-400 text-sm space-y-2">
         <p>Contact: <a href="mailto:launchgrid.hq@proton.me" class="text-honey hover:text-honey-light hover:underline break-all">launchgrid.hq@proton.me</a></p>
+        <p><a href="terms.html" class="hover:text-honey hover:underline">Terms</a> <span aria-hidden="true">&middot;</span> <a href="privacy.html" class="hover:text-honey hover:underline">Privacy</a></p>
         <p>&copy; 2026 NeuralHive. All rights reserved.</p>
     </footer>
 

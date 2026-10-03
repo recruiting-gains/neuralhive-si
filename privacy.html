@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-hive-bg2">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B0B0F">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F5B301'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='%23111111' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="theme.css">
+    <title>Privacy Policy - NeuralHive</title>
+</head>
+<body class="relative isolate antialiased text-gray-200">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-[420px] overflow-hidden -z-10" aria-hidden="true">
+        <div class="hero-glow absolute inset-0"></div>
+    </div>
+    <nav class="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 bg-hive-bg/80 backdrop-blur border-b border-white/[0.08] sticky top-0 z-50">
+        <a href="/" class="flex items-center space-x-2 rounded-lg focus-gold" aria-label="NeuralHive home">
+            <div class="w-8 h-8 bg-honey rounded-lg flex items-center justify-center text-hive-ink font-bold">N</div>
+            <span class="font-bold text-xl text-gray-100">NeuralHive</span>
+        </a>
+        <a href="/app" class="btn-gold text-sm sm:text-base px-3 sm:px-4 py-2 whitespace-nowrap">Open app</a>
+    </nav>
+    <main class="legal max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        <h1 class="gold-text text-3xl sm:text-4xl font-extrabold tracking-tight pb-1">Privacy Policy</h1>
+        <p class="text-sm !text-gray-400 mt-2">Last updated: October 3, 2026</p>
+
+        <p class="mt-6">This policy explains what NeuralHive collects, why, and the choices you have. We collect only what we need to run the service.</p>
+
+        <h2>What we collect</h2>
+        <ul>
+            <li><strong>License and account data:</strong> your Gumroad license key and the purchase email address and subscription status that Gumroad returns when we verify your license.</li>
+            <li><strong>Agents and chats:</strong> the agent names, templates, and instructions you create, and the most recent 50 messages per agent so you can continue conversations.</li>
+            <li><strong>Free preview prompts:</strong> the text you submit to the homepage preview is sent to the AI model to generate a response. We do not store preview prompts or results.</li>
+            <li><strong>Rate-limit data:</strong> a one-way hash of your IP address with a daily counter, kept for up to 2 days, to prevent abuse.</li>
+            <li><strong>Browser storage:</strong> the app stores a session token in your browser's local storage to keep you signed in. We do not use advertising or tracking cookies.</li>
+        </ul>
+
+        <h2>How we use it</h2>
+        <ul>
+            <li>To verify your subscription and keep you signed in.</li>
+            <li>To generate AI responses for your agents and show your chat history.</li>
+            <li>To enforce usage limits, prevent abuse, and keep the service secure.</li>
+            <li>To answer you when you contact us.</li>
+        </ul>
+        <p>We do not sell your personal information, and we do not use your content to train AI models.</p>
+
+        <h2>Service providers</h2>
+        <ul>
+            <li><strong>Cloudflare</strong> hosts NeuralHive, stores app data, and runs the AI models (Workers AI) that generate responses.</li>
+            <li><strong>Gumroad</strong> processes payments and subscriptions and verifies license keys. Payment details are handled by Gumroad and never reach us.</li>
+            <li>Web pages load fonts from Google Fonts and page styling from a public CDN, which may receive your IP address as part of the request.</li>
+        </ul>
+
+        <h2>Retention</h2>
+        <ul>
+            <li>Sessions expire after 30 days, or immediately when you log out.</li>
+            <li>Agents and chat history stay until you delete the agent (which also deletes its history) or ask us to delete your data.</li>
+            <li>Rate-limit counters expire after 2 days.</li>
+        </ul>
+
+        <h2>Your choices and rights</h2>
+        <p>You can delete agents and their chat history in the app at any time. To request a copy or deletion of your data, email <a href="mailto:launchgrid.hq@proton.me">launchgrid.hq@proton.me</a> from your purchase email address. Depending on where you live, you may have additional rights to access, correct, or delete your data, or to object to processing.</p>
+
+        <h2>AI output</h2>
+        <p>AI responses can be inaccurate. Please avoid entering sensitive personal data (such as health, financial, or government ID information) about yourself or others into chats.</p>
+
+        <h2>Security</h2>
+        <p>Data is sent over HTTPS. License keys are never shown to other users, and access to your agents requires a valid session tied to an active subscription. No system is perfectly secure, so keep your license key private.</p>
+
+        <h2>Children</h2>
+        <p>NeuralHive is not intended for children under 16.</p>
+
+        <h2>Changes and contact</h2>
+        <p>We may update this policy; the date above shows the latest version. Questions? Email <a href="mailto:launchgrid.hq@proton.me">launchgrid.hq@proton.me</a>.</p>
+    </main>
+
+    <footer class="border-t border-white/[0.08] mt-16 py-8 text-center text-gray-400 text-sm space-y-2">
+        <p>Contact: <a href="mailto:launchgrid.hq@proton.me" class="text-honey hover:text-honey-light hover:underline break-all">launchgrid.hq@proton.me</a></p>
+        <p><a href="terms.html" class="hover:text-honey hover:underline">Terms</a> <span aria-hidden="true">&middot;</span> <a href="privacy.html" class="hover:text-honey hover:underline">Privacy</a></p>
+        <p>&copy; 2026 NeuralHive. All rights reserved.</p>
+    </footer>
+</body>
+</html>
