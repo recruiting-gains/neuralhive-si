@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-hive-bg2">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B0B0F">
     <title>NeuralHive - Build SI Teammates</title>
     <meta name="description" content="NeuralHive lets you build super intelligence (SI) teammates in minutes. No coding required.">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236366f1'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23F5B301'/%3E%3Ctext x='16' y='22' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='%23111111' text-anchor='middle'%3EN%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'si-primary': '#6366f1', // Indigo
-                        'si-dark': '#0f172a',
+                        'honey': '#F5B301',        // primary accent
+                        'honey-light': '#FFC93C',  // hover / highlight
+                        'hive-bg': '#0B0B0F',
+                        'hive-bg2': '#111118',
+                        'hive-card': '#16161D',
+                        'hive-ink': '#111111',     // text on gold
                     },
                     fontFamily: {
                         'sans': ['Inter', 'sans-serif'],
@@ -26,42 +31,91 @@
         }
     </script>
     <style>
+        :root { color-scheme: dark; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(180deg, #0B0B0F 0%, #111118 100%);
+            min-height: 100vh;
+            color: #E5E7EB;
         }
+        /* Hero backdrop: soft amber glow + faint honeycomb, faded out with a mask */
+        .hero-glow {
+            background: radial-gradient(ellipse 60% 55% at 50% 30%, rgba(245, 179, 1, 0.16) 0%, rgba(245, 158, 11, 0.06) 45%, transparent 75%);
+        }
+        .hero-hex {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23F5B301' stroke-opacity='0.10' stroke-width='1'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%23F5B301' stroke-opacity='0.10' stroke-width='1'/%3E%3C/svg%3E");
+            background-position: center top;
+            -webkit-mask-image: radial-gradient(ellipse 55% 60% at 50% 35%, #000 0%, transparent 75%);
+                    mask-image: radial-gradient(ellipse 55% 60% at 50% 35%, #000 0%, transparent 75%);
+        }
+        .gold-text {
+            background: linear-gradient(90deg, #FFD166 0%, #F59E0B 100%);
+            -webkit-background-clip: text;
+                    background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #FFC93C; /* fallback */
+        }
+        .hive-card {
+            background-color: #16161D;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+        }
+        .hive-card:hover {
+            border-color: rgba(245, 179, 1, 0.35);
+            box-shadow: 0 0 0 1px rgba(245, 179, 1, 0.08), 0 8px 32px -6px rgba(245, 179, 1, 0.22);
+            transform: translateY(-2px);
+        }
+        .prompt-panel {
+            background-color: #16161D;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.8), 0 0 50px -20px rgba(245, 179, 1, 0.25);
+        }
+        #modelPicker option { background-color: #16161D; color: #E5E7EB; }
+        /* Inline form messages (set by script.js) */
+        .msg-success { background-color: rgba(16, 185, 129, 0.10); border: 1px solid rgba(52, 211, 153, 0.35); color: #6EE7B7; }
+        .msg-error   { background-color: rgba(239, 68, 68, 0.10);  border: 1px solid rgba(248, 113, 113, 0.40); color: #FCA5A5; }
+        .input-error { border-color: #F87171 !important; --tw-ring-color: #F87171 !important; }
         /* Custom scrollbar for a polished look */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: #0B0B0F;
         }
         ::-webkit-scrollbar-thumb {
-            background: #c7c7c7;
+            background: #2A2A33;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+            background: #3A3A45;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hive-card, .hive-card:hover { transition: none; transform: none; }
         }
     </style>
 </head>
-<body class="antialiased text-slate-800">
+<body class="relative isolate antialiased text-gray-200">
+
+    <!-- Decorative hero backdrop -->
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-[720px] overflow-hidden -z-10" aria-hidden="true">
+        <div class="hero-glow absolute inset-0"></div>
+        <div class="hero-hex absolute inset-0"></div>
+    </div>
 
     <!-- Navigation -->
-    <nav class="flex items-center justify-between px-4 sm:px-6 py-4 bg-white border-b border-slate-100 sticky top-0 z-50">
-        <a href="#" class="flex items-center space-x-2" aria-label="NeuralHive home">
-            <div class="w-8 h-8 bg-si-primary rounded-lg flex items-center justify-center text-white font-bold">N</div>
-            <span class="font-bold text-xl text-si-dark">NeuralHive</span>
+    <nav class="flex items-center justify-between px-4 sm:px-6 py-4 bg-hive-bg/80 backdrop-blur border-b border-white/[0.08] sticky top-0 z-50">
+        <a href="#" class="flex items-center space-x-2 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-honey" aria-label="NeuralHive home">
+            <div class="w-8 h-8 bg-honey rounded-lg flex items-center justify-center text-hive-ink font-bold shadow-[0_0_18px_-4px_rgba(245,179,1,0.6)]">N</div>
+            <span class="font-bold text-xl text-gray-100">NeuralHive</span>
         </a>
         <div class="hidden md:flex space-x-8">
-            <a href="#templates" class="text-slate-600 hover:text-si-primary font-medium">Features</a>
-            <a href="#" class="text-slate-600 hover:text-si-primary font-medium">Pricing</a>
-            <a href="#" class="text-slate-600 hover:text-si-primary font-medium">Docs</a>
+            <a href="#templates" class="text-gray-400 hover:text-honey font-medium transition">Features</a>
+            <a href="#" class="text-gray-400 hover:text-honey font-medium transition">Pricing</a>
+            <a href="#" class="text-gray-400 hover:text-honey font-medium transition">Docs</a>
         </div>
         <div class="flex items-center space-x-3 sm:space-x-4">
-            <a href="#" class="hidden sm:inline text-slate-600 hover:text-si-primary font-medium">Log in</a>
-            <a href="#create" class="bg-si-primary text-white text-sm sm:text-base px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-indigo-600 transition whitespace-nowrap">Get Started</a>
+            <a href="#" class="hidden sm:inline text-gray-300 hover:text-honey font-medium transition">Log in</a>
+            <a href="#create" class="bg-honey text-hive-ink text-sm sm:text-base px-3 sm:px-4 py-2 rounded-lg font-semibold hover:bg-honey-light transition whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-honey-light focus-visible:ring-offset-2 focus-visible:ring-offset-hive-bg">Get Started</a>
         </div>
     </nav>
 
@@ -70,30 +124,30 @@
 
         <!-- Hero Section -->
         <div class="text-center mb-12">
-            <span class="inline-block mb-4 text-xs font-semibold tracking-wide uppercase text-si-primary bg-indigo-50 px-3 py-1 rounded-full">SI, not just AI</span>
-            <h1 class="text-4xl md:text-6xl font-bold text-si-dark mb-4 tracking-tight">Build SI teammates in minutes.</h1>
-            <p class="text-lg sm:text-xl text-slate-500 mb-8 max-w-2xl mx-auto">No coding required. Describe the job, and NeuralHive's super intelligence assembles a custom agent that gets it done.</p>
+            <span class="inline-block mb-4 text-xs font-semibold tracking-wide uppercase text-honey-light bg-honey/10 border border-honey/30 px-3 py-1 rounded-full">SI, not just AI</span>
+            <h1 class="gold-text text-4xl md:text-6xl font-extrabold mb-4 tracking-tight pb-1">Build SI teammates in minutes.</h1>
+            <p class="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl mx-auto">No coding required. Describe the job, and NeuralHive's super intelligence assembles a custom agent that gets it done.</p>
 
             <!-- Prompt Box -->
-            <div id="create" class="scroll-mt-24 bg-white p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-200 max-w-3xl mx-auto text-left">
+            <div id="create" class="prompt-panel scroll-mt-24 p-4 sm:p-6 rounded-2xl max-w-3xl mx-auto text-left">
                 <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex-1">
                         <label for="promptInput" class="sr-only">Describe your SI teammate</label>
                         <textarea id="promptInput"
-                                class="w-full h-32 p-4 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-si-primary focus:border-transparent resize-none text-slate-700"
+                                class="w-full h-32 p-4 bg-hive-bg/70 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-honey focus:border-transparent resize-none text-gray-200 placeholder:text-[#8B909C]"
                                 placeholder="e.g., A recruiter that screens resumes, schedules interviews, and updates my candidate tracker."></textarea>
                     </div>
                     <div class="flex flex-col gap-4 md:w-72">
-                        <div class="flex-1 flex items-center bg-slate-50 rounded-lg p-3 border border-slate-200">
-                            <label for="modelPicker" class="text-slate-500 text-sm mr-2 whitespace-nowrap">Model:</label>
-                            <select id="modelPicker" class="bg-transparent border-0 text-slate-700 font-medium focus:outline-none cursor-pointer w-full min-w-0 text-sm">
+                        <div class="flex-1 flex items-center bg-white/[0.04] rounded-lg p-3 border border-white/10 focus-within:ring-2 focus-within:ring-honey">
+                            <label for="modelPicker" class="text-gray-400 text-sm mr-2 whitespace-nowrap">Model:</label>
+                            <select id="modelPicker" class="bg-transparent border-0 text-gray-200 font-medium focus:outline-none cursor-pointer w-full min-w-0 text-sm">
                                 <option value="si-1">NeuralHive SI-1 (Default)</option>
                                 <option value="si-1-fast">NeuralHive SI-1 Fast</option>
                                 <option value="si-1-deep">NeuralHive SI-1 Deep</option>
                             </select>
                         </div>
                         <button id="createBtn" type="button"
-                                class="w-full bg-si-primary text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-600 transition shadow-md disabled:cursor-not-allowed">
+                                class="w-full bg-honey text-hive-ink font-semibold py-3 px-6 rounded-lg hover:bg-honey-light transition shadow-[0_8px_24px_-8px_rgba(245,179,1,0.55)] disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-honey-light focus-visible:ring-offset-2 focus-visible:ring-offset-hive-card">
                             Create Agent
                         </button>
                     </div>
@@ -103,130 +157,130 @@
         </div>
 
         <!-- Template Cards -->
-        <h2 id="templates" class="scroll-mt-24 text-2xl font-bold text-si-dark mb-6 text-center">Start with a Template</h2>
+        <h2 id="templates" class="scroll-mt-24 text-2xl font-bold text-gray-100 mb-6 text-center">Start with a Template</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <!-- Card 1: Recruiting Agent -->
-            <div class="template-card flex flex-col bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+            <div class="template-card hive-card flex flex-col p-6 rounded-xl">
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <span class="text-green-600 font-bold">R</span>
+                    <div class="w-10 h-10 rounded-lg ring-1 ring-inset bg-yellow-400/10 ring-yellow-400/25 text-yellow-300 flex items-center justify-center">
+                        <span class="font-bold">R</span>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-lg">Recruiting Agent</h3>
-                        <p class="text-xs text-slate-500">HR &amp; Talent</p>
+                        <h3 class="font-semibold text-lg text-gray-100">Recruiting Agent</h3>
+                        <p class="text-xs text-gray-400">HR &amp; Talent</p>
                     </div>
                 </div>
-                <p class="template-desc text-slate-600 text-sm mb-4">Automates resume screening, schedules interviews, and updates spreadsheets.</p>
+                <p class="template-desc text-gray-400 text-sm mb-4">Automates resume screening, schedules interviews, and updates spreadsheets.</p>
                 <div class="flex flex-wrap gap-2 mb-4 mt-auto">
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Google Sheets</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Gmail</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Outlook</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Google Sheets</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Gmail</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Outlook</span>
                 </div>
-                <button type="button" class="use-template w-full text-si-primary font-medium hover:underline">Use Template</button>
+                <button type="button" class="use-template w-full text-honey hover:text-honey-light font-medium hover:underline rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-honey">Use Template</button>
             </div>
 
             <!-- Card 2: Customer Support -->
-            <div class="template-card flex flex-col bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+            <div class="template-card hive-card flex flex-col p-6 rounded-xl">
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <span class="text-blue-600 font-bold">C</span>
+                    <div class="w-10 h-10 rounded-lg ring-1 ring-inset bg-amber-400/10 ring-amber-400/25 text-amber-300 flex items-center justify-center">
+                        <span class="font-bold">C</span>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-lg">Support Agent</h3>
-                        <p class="text-xs text-slate-500">Customer Success</p>
+                        <h3 class="font-semibold text-lg text-gray-100">Support Agent</h3>
+                        <p class="text-xs text-gray-400">Customer Success</p>
                     </div>
                 </div>
-                <p class="template-desc text-slate-600 text-sm mb-4">Handles FAQs, resolves tickets, and escalates complex issues to humans.</p>
+                <p class="template-desc text-gray-400 text-sm mb-4">Handles FAQs, resolves tickets, and escalates complex issues to humans.</p>
                 <div class="flex flex-wrap gap-2 mb-4 mt-auto">
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Zendesk</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Slack</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Zendesk</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Slack</span>
                 </div>
-                <button type="button" class="use-template w-full text-si-primary font-medium hover:underline">Use Template</button>
+                <button type="button" class="use-template w-full text-honey hover:text-honey-light font-medium hover:underline rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-honey">Use Template</button>
             </div>
 
             <!-- Card 3: Sales Outreach -->
-            <div class="template-card flex flex-col bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+            <div class="template-card hive-card flex flex-col p-6 rounded-xl">
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <span class="text-purple-600 font-bold">S</span>
+                    <div class="w-10 h-10 rounded-lg ring-1 ring-inset bg-orange-500/10 ring-orange-500/25 text-orange-300 flex items-center justify-center">
+                        <span class="font-bold">S</span>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-lg">Sales Agent</h3>
-                        <p class="text-xs text-slate-500">Revenue Growth</p>
+                        <h3 class="font-semibold text-lg text-gray-100">Sales Agent</h3>
+                        <p class="text-xs text-gray-400">Revenue Growth</p>
                     </div>
                 </div>
-                <p class="template-desc text-slate-600 text-sm mb-4">Personalizes outreach emails, enriches leads, and logs activity in CRM.</p>
+                <p class="template-desc text-gray-400 text-sm mb-4">Personalizes outreach emails, enriches leads, and logs activity in CRM.</p>
                 <div class="flex flex-wrap gap-2 mb-4 mt-auto">
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Salesforce</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">LinkedIn</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Gmail</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Salesforce</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">LinkedIn</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Gmail</span>
                 </div>
-                <button type="button" class="use-template w-full text-si-primary font-medium hover:underline">Use Template</button>
+                <button type="button" class="use-template w-full text-honey hover:text-honey-light font-medium hover:underline rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-honey">Use Template</button>
             </div>
 
             <!-- Card 4: Code Review -->
-            <div class="template-card flex flex-col bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+            <div class="template-card hive-card flex flex-col p-6 rounded-xl">
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                        <span class="text-orange-600 font-bold">D</span>
+                    <div class="w-10 h-10 rounded-lg ring-1 ring-inset bg-yellow-400/10 ring-yellow-400/25 text-yellow-300 flex items-center justify-center">
+                        <span class="font-bold">D</span>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-lg">Dev Agent</h3>
-                        <p class="text-xs text-slate-500">Engineering</p>
+                        <h3 class="font-semibold text-lg text-gray-100">Dev Agent</h3>
+                        <p class="text-xs text-gray-400">Engineering</p>
                     </div>
                 </div>
-                <p class="template-desc text-slate-600 text-sm mb-4">Reviews pull requests, fixes linting errors, and suggests improvements.</p>
+                <p class="template-desc text-gray-400 text-sm mb-4">Reviews pull requests, fixes linting errors, and suggests improvements.</p>
                 <div class="flex flex-wrap gap-2 mb-4 mt-auto">
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">GitHub</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Jira</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">GitHub</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Jira</span>
                 </div>
-                <button type="button" class="use-template w-full text-si-primary font-medium hover:underline">Use Template</button>
+                <button type="button" class="use-template w-full text-honey hover:text-honey-light font-medium hover:underline rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-honey">Use Template</button>
             </div>
 
             <!-- Card 5: Data Analyst -->
-            <div class="template-card flex flex-col bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+            <div class="template-card hive-card flex flex-col p-6 rounded-xl">
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
-                        <span class="text-pink-600 font-bold">A</span>
+                    <div class="w-10 h-10 rounded-lg ring-1 ring-inset bg-amber-400/10 ring-amber-400/25 text-amber-300 flex items-center justify-center">
+                        <span class="font-bold">A</span>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-lg">Data Agent</h3>
-                        <p class="text-xs text-slate-500">Analytics</p>
+                        <h3 class="font-semibold text-lg text-gray-100">Data Agent</h3>
+                        <p class="text-xs text-gray-400">Analytics</p>
                     </div>
                 </div>
-                <p class="template-desc text-slate-600 text-sm mb-4">Generates SQL queries, creates visualizations, and summarizes trends.</p>
+                <p class="template-desc text-gray-400 text-sm mb-4">Generates SQL queries, creates visualizations, and summarizes trends.</p>
                 <div class="flex flex-wrap gap-2 mb-4 mt-auto">
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Snowflake</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Tableau</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Snowflake</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Tableau</span>
                 </div>
-                <button type="button" class="use-template w-full text-si-primary font-medium hover:underline">Use Template</button>
+                <button type="button" class="use-template w-full text-honey hover:text-honey-light font-medium hover:underline rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-honey">Use Template</button>
             </div>
 
             <!-- Card 6: Social Media -->
-            <div class="template-card flex flex-col bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+            <div class="template-card hive-card flex flex-col p-6 rounded-xl">
                 <div class="flex items-center space-x-3 mb-4">
-                    <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
-                        <span class="text-teal-600 font-bold">M</span>
+                    <div class="w-10 h-10 rounded-lg ring-1 ring-inset bg-orange-500/10 ring-orange-500/25 text-orange-300 flex items-center justify-center">
+                        <span class="font-bold">M</span>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-lg">Marketing Agent</h3>
-                        <p class="text-xs text-slate-500">Growth</p>
+                        <h3 class="font-semibold text-lg text-gray-100">Marketing Agent</h3>
+                        <p class="text-xs text-gray-400">Growth</p>
                     </div>
                 </div>
-                <p class="template-desc text-slate-600 text-sm mb-4">Drafts posts, analyzes engagement, and schedules content across platforms.</p>
+                <p class="template-desc text-gray-400 text-sm mb-4">Drafts posts, analyzes engagement, and schedules content across platforms.</p>
                 <div class="flex flex-wrap gap-2 mb-4 mt-auto">
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">X</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">LinkedIn</span>
-                    <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">Instagram</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">X</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">LinkedIn</span>
+                    <span class="bg-white/5 border border-white/10 text-gray-400 text-xs px-2 py-1 rounded">Instagram</span>
                 </div>
-                <button type="button" class="use-template w-full text-si-primary font-medium hover:underline">Use Template</button>
+                <button type="button" class="use-template w-full text-honey hover:text-honey-light font-medium hover:underline rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-honey">Use Template</button>
             </div>
 
         </div>
     </main>
 
-    <footer class="border-t border-slate-100 mt-20 py-8 text-center text-slate-500 text-sm">
+    <footer class="border-t border-white/[0.08] mt-20 py-8 text-center text-gray-400 text-sm">
         <p>&copy; 2026 NeuralHive. All rights reserved.</p>
     </footer>
 

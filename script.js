@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const DEFAULT_LABEL = 'Create Agent';
     const MESSAGE_STYLES = {
-        success: ['bg-green-50', 'text-green-700', 'border', 'border-green-200'],
-        error: ['bg-red-50', 'text-red-700', 'border', 'border-red-200'],
+        success: ['msg-success'],
+        error: ['msg-error'],
     };
     let messageTimer = null;
 
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createBtn.disabled = isLoading;
         createBtn.textContent = isLoading ? 'Creating...' : DEFAULT_LABEL;
         createBtn.classList.toggle('opacity-70', isLoading);
-        promptInput.classList.remove('border-red-400');
+        promptInput.classList.remove('input-error');
     }
 
     // Simulated request. In production, replace with a POST to your backend, e.g.
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!prompt) {
             showMessage('Please describe what you want your SI teammate to do.', 'error');
-            promptInput.classList.add('border-red-400');
+            promptInput.classList.add('input-error');
             promptInput.focus();
             return;
         }
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     promptInput.addEventListener('input', () => {
-        promptInput.classList.remove('border-red-400');
+        promptInput.classList.remove('input-error');
     });
 
     // "Use Template" fills the prompt with the template's description and scrolls to it
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!desc) return;
 
             promptInput.value = desc.textContent.trim();
-            promptInput.classList.remove('border-red-400');
+            promptInput.classList.remove('input-error');
             hideMessage();
             promptBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
             promptInput.focus({ preventScroll: true });
