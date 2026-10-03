@@ -49,26 +49,27 @@ Errors look like `{ "error": "Human readable message", "code": "machine_code" }`
 | `DELETE /api/agents/:id` | ✓ | – | Also deletes the agent's history |
 | `GET /api/chat?agent_id=` | ✓ | – | Last 50 stored messages |
 | `POST /api/chat` | ✓ | `{ agent_id, messages }` | Uses the last `user` message; context comes from stored history |
-| `POST /api/preview` | – | `{ prompt, model? }` | Free agent plan: `{ plan: { name, role, tasks[3], first_reply } }` |
+| `POST /api/preview` | – | `{ prompt }` | Free agent plan: `{ plan: { name, role, tasks[3], first_reply } }` |
 
 ### Licensing
 
 * Gumroad `POST https://api.gumroad.com/v2/licenses/verify` with `product_id`, `license_key`, `increment_uses_count=false`.
-* Rejected when `refunded`, `chargebacked`, disputed, or `subscription_cancelled_at` / `subscription_failed_at` / `subscription_ended_at` is set.
+* Rejected when `refunded`, `chargebacked`, disputed (and not won), or `subscription_failed_at` / `subscription_ended_at` is set.
+  `subscription_cancelled_at` alone does **not** revoke access: cancelled subscribers keep access until the paid period ends (`subscription_ended_at`).
 * Every authenticated call re-verifies with Gumroad at most once per 24h per license (cached in KV); inactive licenses get
   `402 subscription_inactive` and the session is deleted. If Gumroad is unreachable, a license verified within the last 72h keeps working.
 
 ### Limits
 
-* 200 chat messages / day / license
+* 100 chat messages / day / license
 * 3 free previews / day / IP
 * 30 unauthenticated calls (activation attempts + previews) / day / IP
 * Counters are daily (UTC) in KV, so they are approximate under heavy concurrency.
 
 ### Models
 
-`@cf/meta/llama-3.3-70b-instruct-fp8-fast`, falling back to `@cf/meta/llama-3.1-8b-instruct` on error.
-The landing page's "SI-1 Fast" option tries the 8B model first for previews.
+* Chat: `@cf/meta/llama-3.3-70b-instruct-fp8-fast`, falling back to `@cf/meta/llama-3.1-8b-instruct` on error.
+* Free preview: `@cf/meta/llama-3.1-8b-instruct-fast`, falling back to `@cf/meta/llama-3.1-8b-instruct` (cost control).
 
 ### KV keys
 

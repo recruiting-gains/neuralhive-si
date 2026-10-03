@@ -3,7 +3,12 @@ import { HttpError } from './http.js';
 export const MODELS = {
     primary: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
     fallback: '@cf/meta/llama-3.1-8b-instruct',
+    fast: '@cf/meta/llama-3.1-8b-instruct-fast',
 };
+
+// Chat: big model first, small model as fallback. Preview (free, unauthenticated): small models only, for cost control.
+export const CHAT_MODELS = [MODELS.primary, MODELS.fallback];
+export const PREVIEW_MODELS = [MODELS.fast, MODELS.fallback];
 
 function extractText(result) {
     if (!result) return '';
@@ -15,11 +20,11 @@ function extractText(result) {
 }
 
 /**
- * Run a chat completion on Workers AI, falling back to the smaller model if
- * the primary errors or returns nothing. Returns { text, model }.
+ * Run a chat completion on Workers AI, trying each model in `models` in order
+ * until one returns text. Returns { text, model }.
  */
-export async function runChat(env, messages, { maxTokens = 1024, temperature = 0.6, preferFast = false } = {}) {
-    const order = preferFast ? [MODELS.fallback, MODELS.primary] : [MODELS.primary, MODELS.fallback];
+export async function runChat(env, messages, { maxTokens = 1024, temperature = 0.6, models = CHAT_MODELS } = {}) {
+    const order = models;
     let lastErr = null;
     for (const model of order) {
         try {

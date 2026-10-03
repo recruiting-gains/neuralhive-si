@@ -4,7 +4,7 @@ import { HttpError } from './http.js';
 // consistent, so limits are approximate under heavy concurrency; that is
 // acceptable for abuse protection at this scale.
 export const LIMITS = {
-    chatPerLicense: 200, // chat messages per license per day
+    chatPerLicense: 100, // chat messages per license per day
     previewPerIp: 3, // free landing-page previews per IP per day
     publicPerIp: 30, // all unauthenticated calls that hit Gumroad/AI (activate + preview) per IP per day
 };

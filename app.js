@@ -7,12 +7,12 @@
     const LICENSE_RE = /^[A-Za-z0-9-]{8,64}$/;
 
     const FALLBACK_TEMPLATES = [
-        { id: 'recruiting', name: 'Recruiting Agent', category: 'HR & Talent', description: 'Automates resume screening, schedules interviews, and updates spreadsheets.' },
-        { id: 'support', name: 'Support Agent', category: 'Customer Success', description: 'Handles FAQs, resolves tickets, and escalates complex issues to humans.' },
-        { id: 'sales', name: 'Sales Agent', category: 'Revenue Growth', description: 'Personalizes outreach emails, enriches leads, and logs activity in CRM.' },
-        { id: 'dev', name: 'Dev Agent', category: 'Engineering', description: 'Reviews pull requests, fixes linting errors, and suggests improvements.' },
-        { id: 'data', name: 'Data Agent', category: 'Analytics', description: 'Generates SQL queries, creates visualizations, and summarizes trends.' },
-        { id: 'marketing', name: 'Marketing Agent', category: 'Growth', description: 'Drafts posts, analyzes engagement, and schedules content across platforms.' },
+        { id: 'recruiting', name: 'Recruiting Agent', category: 'HR & Talent', description: 'Screens resumes you paste, drafts interview invites, and prepares tracker-ready rows.' },
+        { id: 'support', name: 'Support Agent', category: 'Customer Success', description: 'Drafts replies to FAQs and tickets, and flags complex issues for a human.' },
+        { id: 'sales', name: 'Sales Agent', category: 'Revenue Growth', description: 'Writes personalized outreach emails, plans lead research, and drafts CRM-ready notes.' },
+        { id: 'dev', name: 'Dev Agent', category: 'Engineering', description: 'Reviews code you paste, suggests fixes for bugs and lint errors, and proposes improvements.' },
+        { id: 'data', name: 'Data Agent', category: 'Analytics', description: 'Writes SQL queries, recommends charts, and summarizes trends in data you share.' },
+        { id: 'marketing', name: 'Marketing Agent', category: 'Growth', description: 'Drafts posts, analyzes engagement numbers you share, and plans content calendars.' },
         { id: 'custom', name: 'Custom Agent', category: 'Custom', description: 'Your own SI teammate, defined entirely by your instructions.' },
     ];
     const TILE = { recruiting: ['R', 'tile-gold'], support: ['C', 'tile-amber'], sales: ['S', 'tile-orange'], dev: ['D', 'tile-gold'], data: ['A', 'tile-amber'], marketing: ['M', 'tile-orange'], custom: [null, 'tile-amber'] };
@@ -54,7 +54,7 @@
         history: {}, // agentId -> messages
         sending: false,
         remaining: null,
-        dailyLimit: 200,
+        dailyLimit: 100,
     };
 
     const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;

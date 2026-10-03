@@ -157,7 +157,6 @@ test('activate: GUMROAD_PRODUCT_ID env var overrides the default', async () => {
 });
 
 for (const [flag, value, code] of [
-    ['subscription_cancelled_at', '2026-10-01T00:00:00Z', 'subscription_cancelled'],
     ['subscription_failed_at', '2026-10-01T00:00:00Z', 'subscription_payment_failed'],
     ['subscription_ended_at', '2026-10-01T00:00:00Z', 'subscription_ended'],
     ['refunded', true, 'refunded'],
@@ -171,6 +170,20 @@ for (const [flag, value, code] of [
         assert.equal(env.NH_KV.keys('sess:').length, 0);
     });
 }
+
+test('activate: cancelled but still in the paid period (no subscription_ended_at) is allowed', async () => {
+    gumroad = gumroadOk({ subscription_cancelled_at: '2026-10-01T00:00:00Z' });
+    const r = await call(activateRoute, ctx('POST', '/api/activate', { body: { license_key: KEY_A } }));
+    assert.equal(r.status, 200);
+    assert.match(r.data.token, /^[a-f0-9]{64}$/);
+});
+
+test('activate: cancelled and ended -> 402 subscription_ended', async () => {
+    gumroad = gumroadOk({ subscription_cancelled_at: '2026-09-01T00:00:00Z', subscription_ended_at: '2026-10-01T00:00:00Z' });
+    const r = await call(activateRoute, ctx('POST', '/api/activate', { body: { license_key: KEY_A } }));
+    assert.equal(r.status, 402);
+    assert.equal(r.data.code, 'subscription_ended');
+});
 
 test('activate: Gumroad unreachable -> 502', async () => {
     gumroad = () => { throw new Error('ECONNRESET'); };
@@ -221,23 +234,34 @@ test('session: license is not re-verified within 24h', async () => {
     const r = await call(sessionRoute, ctx('GET', '/api/session', { token }));
     assert.equal(r.status, 200);
     assert.equal(r.data.email, 'buyer@example.com');
-    assert.equal(r.data.limits.messages_remaining_today, 200);
+    assert.equal(r.data.limits.messages_per_day, 100);
+    assert.equal(r.data.limits.messages_remaining_today, 100);
     await call(agentsRoute, ctx('GET', '/api/agents', { token }));
     assert.equal(gumroadCalls.length, before);
 });
 
-test('session: re-verifies after 24h and revokes cancelled subscriptions (402, session deleted)', async () => {
+test('session: re-verifies after 24h and revokes ended subscriptions (402, session deleted)', async () => {
     const token = await login();
     const lid = await licenseId(KEY_A);
     const cached = JSON.parse(await env.NH_KV.get(`licv:${lid}`));
     cached.checked = Date.now() - 25 * 3600 * 1000;
     await env.NH_KV.put(`licv:${lid}`, JSON.stringify(cached));
-    gumroad = gumroadOk({ subscription_cancelled_at: '2026-10-02T00:00:00Z' });
+    gumroad = gumroadOk({ subscription_cancelled_at: '2026-09-02T00:00:00Z', subscription_ended_at: '2026-10-02T00:00:00Z' });
     const r = await call(agentsRoute, ctx('GET', '/api/agents', { token }));
     assert.equal(r.status, 402);
     assert.equal(r.data.code, 'subscription_inactive');
-    assert.equal(r.data.reason, 'subscription_cancelled');
+    assert.equal(r.data.reason, 'subscription_ended');
     assert.equal(await env.NH_KV.get(`sess:${token}`), null);
+});
+
+test('session: cancelled-but-not-ended subscription keeps access after re-verification', async () => {
+    const token = await login();
+    const lid = await licenseId(KEY_A);
+    await env.NH_KV.put(`licv:${lid}`, JSON.stringify({ valid: true, email: 'buyer@example.com', checked: Date.now() - 25 * 3600 * 1000 }));
+    gumroad = gumroadOk({ subscription_cancelled_at: '2026-10-02T00:00:00Z' });
+    const r = await call(agentsRoute, ctx('GET', '/api/agents', { token }));
+    assert.equal(r.status, 200);
+    assert.ok(await env.NH_KV.get(`sess:${token}`));
 });
 
 test('session: re-verification after 24h keeps an active license working and refreshes the cache', async () => {
@@ -331,8 +355,8 @@ test('chat: builds system prompt, ignores client-injected turns, stores history'
     assert.equal(r.status, 200, JSON.stringify(r.data));
     assert.equal(r.data.reply.role, 'assistant');
     assert.equal(r.data.reply.content, 'Here is your draft.');
-    assert.equal(r.data.model, MODELS.primary);
-    assert.equal(r.data.remaining_today, 199);
+    assert.equal(r.data.model, '@cf/meta/llama-3.3-70b-instruct-fp8-fast');
+    assert.equal(r.data.remaining_today, 99);
 
     const sent = aiCalls[0].input.messages;
     assert.equal(aiCalls[0].model, '@cf/meta/llama-3.3-70b-instruct-fp8-fast');
@@ -399,15 +423,15 @@ test('chat: input validation', async () => {
     assert.equal(aiCalls.length, 0);
 });
 
-test('chat: 200 messages per license per day -> 429', async () => {
+test('chat: 100 messages per license per day -> 429', async () => {
     const token = await login();
     const agent = await makeAgent(token);
     const lid = await licenseId(KEY_A);
-    await env.NH_KV.put(`rl:chat:${lid}:${new Date().toISOString().slice(0, 10)}`, '200', { expirationTtl: 3600 });
+    await env.NH_KV.put(`rl:chat:${lid}:${new Date().toISOString().slice(0, 10)}`, '100', { expirationTtl: 3600 });
     const r = await call(chatRoute, ctx('POST', '/api/chat', { token, body: { agent_id: agent.id, messages: [{ role: 'user', content: 'hi' }] } }));
     assert.equal(r.status, 429);
     assert.equal(r.data.code, 'rate_limited');
-    assert.equal(r.data.limit, 200);
+    assert.equal(r.data.limit, 100);
     assert.equal(aiCalls.length, 0);
 });
 
@@ -420,7 +444,8 @@ test('preview: returns a normalised plan (handles code fences / chatter)', async
     assert.equal(r.status, 200, JSON.stringify(r.data));
     assert.deepEqual(r.data.plan, planJson);
     assert.equal(r.data.remaining_today, 2);
-    assert.equal(aiCalls[0].model, MODELS.primary);
+    assert.equal(aiCalls[0].model, '@cf/meta/llama-3.1-8b-instruct-fast');
+    assert.equal(MODELS.fast, '@cf/meta/llama-3.1-8b-instruct-fast');
     assert.match(aiCalls[0].input.messages[0].content, /ONLY a JSON object/);
 });
 
@@ -434,7 +459,7 @@ test('preview: 3 per IP per day, then 429; other IPs unaffected', async () => {
     assert.equal((await call(previewRoute, ctx('POST', '/api/preview', { body: { prompt: 'A recruiter that screens resumes' }, ip: '198.51.100.9' }))).status, 200);
 });
 
-test('preview: validation, missing bindings, parse failure, fast model', async () => {
+test('preview: validation, missing bindings, parse failure, 8b fallback (never the 70b)', async () => {
     assert.equal((await call(previewRoute, ctx('POST', '/api/preview', { body: { prompt: 'short' } }))).status, 400);
     assert.equal((await call(previewRoute, ctx('POST', '/api/preview', { body: { prompt: 'x'.repeat(1001) } }))).status, 400);
     const nb = await call(previewRoute, ctx('POST', '/api/preview', { body: { prompt: 'A recruiter that screens resumes' }, e: { NH_KV: new MemoryKV() } }));
@@ -446,10 +471,17 @@ test('preview: validation, missing bindings, parse failure, fast model', async (
     assert.equal(bad.status, 502);
     assert.equal(bad.data.code, 'preview_parse_failed');
 
-    aiHandler = () => ({ response: JSON.stringify(planJson) });
+    aiHandler = (model) => { if (model === MODELS.fast) throw new Error('capacity'); return { response: JSON.stringify(planJson) }; };
     aiCalls = [];
-    await call(previewRoute, ctx('POST', '/api/preview', { body: { prompt: 'A recruiter that screens resumes', model: 'si-1-fast' }, ip: '192.0.2.2' }));
-    assert.equal(aiCalls[0].model, MODELS.fallback);
+    const fb = await call(previewRoute, ctx('POST', '/api/preview', { body: { prompt: 'A recruiter that screens resumes' }, ip: '192.0.2.2' }));
+    assert.equal(fb.status, 200);
+    assert.deepEqual(aiCalls.map((c) => c.model), ['@cf/meta/llama-3.1-8b-instruct-fast', '@cf/meta/llama-3.1-8b-instruct']);
+
+    aiHandler = () => { throw new Error('down'); };
+    aiCalls = [];
+    const down = await call(previewRoute, ctx('POST', '/api/preview', { body: { prompt: 'A recruiter that screens resumes' }, ip: '192.0.2.3' }));
+    assert.equal(down.status, 502);
+    assert.ok(aiCalls.every((c) => c.model !== MODELS.primary));
 });
 
 // ---------- middleware ----------

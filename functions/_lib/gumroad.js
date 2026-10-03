@@ -51,13 +51,14 @@ export async function verifyLicense(env, licenseKey) {
     return { valid: true, email: typeof p.email === 'string' ? p.email : '', purchase: p };
 }
 
+// A cancelled subscription (subscription_cancelled_at) keeps access until the paid period ends;
+// Gumroad then sets subscription_ended_at, which is what revokes access.
 export function inactiveReason(p) {
     if (p.refunded) return 'refunded';
     if (p.chargebacked) return 'chargebacked';
     if (p.disputed && !p.dispute_won) return 'disputed';
     if (p.subscription_ended_at) return 'subscription_ended';
     if (p.subscription_failed_at) return 'subscription_payment_failed';
-    if (p.subscription_cancelled_at) return 'subscription_cancelled';
     return null;
 }
 
@@ -68,5 +69,4 @@ export const REASON_MESSAGES = {
     disputed: 'This purchase is under dispute, so the license is paused.',
     subscription_ended: 'Your NeuralHive Pro subscription has ended. Renew it on Gumroad to continue.',
     subscription_payment_failed: "Your last NeuralHive Pro payment failed. Update your payment method on Gumroad to continue.",
-    subscription_cancelled: 'Your NeuralHive Pro subscription was cancelled. Resubscribe on Gumroad to continue.',
 };

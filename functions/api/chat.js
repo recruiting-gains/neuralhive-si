@@ -2,7 +2,7 @@ import { route, json, readJson, requireBindings, cleanString, HttpError } from '
 import { requireSession } from '../_lib/auth.js';
 import { getAgent, getHistory, saveHistory, assertAgentId } from '../_lib/agents.js';
 import { buildSystemPrompt } from '../_lib/templates.js';
-import { runChat } from '../_lib/ai.js';
+import { runChat, CHAT_MODELS } from '../_lib/ai.js';
 import { hit, LIMITS } from '../_lib/ratelimit.js';
 
 const CONTEXT_MESSAGES = 20; // stored messages sent to the model as context
@@ -46,7 +46,7 @@ export const onRequest = route({
             .map((m) => ({ role: m.role, content: m.content }));
         const messages = [{ role: 'system', content: buildSystemPrompt(agent) }, ...context_, { role: 'user', content }];
 
-        const { text, model } = await runChat(env, messages, { maxTokens: 1024 });
+        const { text, model } = await runChat(env, messages, { maxTokens: 1024, models: CHAT_MODELS });
         const now = new Date().toISOString();
         const userMsg = { role: 'user', content, ts: now };
         const reply = { role: 'assistant', content: text.slice(0, 8000), ts: new Date().toISOString() };
