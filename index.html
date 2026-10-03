@@ -70,6 +70,13 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.8), 0 0 50px -20px rgba(245, 179, 1, 0.25);
         }
+        .pricing-card {
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245, 179, 1, 0.10) 0%, transparent 70%),
+                #16161D;
+            border: 1px solid rgba(245, 179, 1, 0.45);
+            box-shadow: 0 0 0 1px rgba(245, 179, 1, 0.10), 0 20px 60px -20px rgba(245, 179, 1, 0.30);
+        }
         #modelPicker option { background-color: #16161D; color: #E5E7EB; }
         /* Inline form messages (set by script.js) */
         .msg-success { background-color: rgba(16, 185, 129, 0.10); border: 1px solid rgba(52, 211, 153, 0.35); color: #6EE7B7; }
@@ -110,12 +117,12 @@
         </a>
         <div class="hidden md:flex space-x-8">
             <a href="#templates" class="text-gray-400 hover:text-honey font-medium transition">Features</a>
-            <a href="#" class="text-gray-400 hover:text-honey font-medium transition">Pricing</a>
+            <a href="#pricing" class="text-gray-400 hover:text-honey font-medium transition">Pricing</a>
             <a href="#" class="text-gray-400 hover:text-honey font-medium transition">Docs</a>
         </div>
         <div class="flex items-center space-x-3 sm:space-x-4">
             <a href="#" class="hidden sm:inline text-gray-300 hover:text-honey font-medium transition">Log in</a>
-            <a href="#create" class="bg-honey text-hive-ink text-sm sm:text-base px-3 sm:px-4 py-2 rounded-lg font-semibold hover:bg-honey-light transition whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-honey-light focus-visible:ring-offset-2 focus-visible:ring-offset-hive-bg">Get Started</a>
+            <a href="#pricing" class="bg-honey text-hive-ink text-sm sm:text-base px-3 sm:px-4 py-2 rounded-lg font-semibold hover:bg-honey-light transition whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-honey-light focus-visible:ring-offset-2 focus-visible:ring-offset-hive-bg">Get Started</a>
         </div>
     </nav>
 
@@ -278,9 +285,58 @@
             </div>
 
         </div>
+
+        <!-- Pricing -->
+        <section id="pricing" class="scroll-mt-24 mt-20" aria-labelledby="pricing-heading">
+            <div class="text-center mb-8">
+                <h2 id="pricing-heading" class="text-2xl sm:text-3xl font-bold text-gray-100 mb-2">Pricing</h2>
+                <p class="text-gray-400">One plan with everything included.</p>
+            </div>
+
+            <div class="pricing-card relative max-w-md mx-auto rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center justify-between gap-4 mb-6">
+                    <h3 class="text-xl font-bold text-gray-100">NeuralHive Pro</h3>
+                    <span class="text-xs font-semibold tracking-wide uppercase text-honey-light bg-honey/10 border border-honey/30 px-3 py-1 rounded-full">Pro</span>
+                </div>
+                <div class="mb-1 flex items-baseline gap-2">
+                    <span class="gold-text text-5xl font-extrabold tracking-tight">$19</span>
+                    <span class="text-gray-400 font-medium">/ month</span>
+                </div>
+                <p class="text-sm text-gray-400 mb-6">Cancel anytime</p>
+
+                <ul class="space-y-3 text-sm text-gray-200 mb-8">
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 flex-none text-honey mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.25 7.3a1 1 0 0 1-1.42 0L3.29 9.23a1 1 0 1 1 1.42-1.41l4.04 4.07 6.54-6.6a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd"/></svg>
+                        <span>Unlimited SI teammates</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 flex-none text-honey mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.25 7.3a1 1 0 0 1-1.42 0L3.29 9.23a1 1 0 1 1 1.42-1.41l4.04 4.07 6.54-6.6a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd"/></svg>
+                        <span>All 6 agent templates plus custom agents</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 flex-none text-honey mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.25 7.3a1 1 0 0 1-1.42 0L3.29 9.23a1 1 0 1 1 1.42-1.41l4.04 4.07 6.54-6.6a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd"/></svg>
+                        <span>Integrations with Gmail, Slack, Sheets, GitHub and more</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <svg class="w-5 h-5 flex-none text-honey mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 0 1 .006 1.414l-7.25 7.3a1 1 0 0 1-1.42 0L3.29 9.23a1 1 0 1 1 1.42-1.41l4.04 4.07 6.54-6.6a1 1 0 0 1 1.414-.006Z" clip-rule="evenodd"/></svg>
+                        <span>Priority support</span>
+                    </li>
+                </ul>
+
+                <a href="https://launchpad61.gumroad.com/l/xqxyjc" target="_blank" rel="noopener"
+                   class="block w-full text-center bg-honey text-hive-ink font-semibold py-3 px-6 rounded-lg hover:bg-honey-light transition shadow-[0_8px_24px_-8px_rgba(245,179,1,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-honey-light focus-visible:ring-offset-2 focus-visible:ring-offset-hive-card">Get NeuralHive Pro</a>
+            </div>
+
+            <div class="max-w-md mx-auto mt-6 text-center">
+                <p class="text-sm text-gray-400 mb-4">Questions? Email us at <a href="mailto:launchgrid.hq@proton.me" class="text-honey hover:text-honey-light hover:underline break-all">launchgrid.hq@proton.me</a></p>
+                <a href="mailto:launchgrid.hq@proton.me?subject=NeuralHive%20Pro"
+                   class="inline-block border border-honey/60 text-honey font-semibold py-2.5 px-6 rounded-lg hover:bg-honey/10 hover:border-honey hover:text-honey-light transition focus:outline-none focus-visible:ring-2 focus-visible:ring-honey focus-visible:ring-offset-2 focus-visible:ring-offset-hive-bg">Contact us</a>
+            </div>
+        </section>
     </main>
 
-    <footer class="border-t border-white/[0.08] mt-20 py-8 text-center text-gray-400 text-sm">
+    <footer class="border-t border-white/[0.08] mt-20 py-8 text-center text-gray-400 text-sm space-y-2">
+        <p>Contact: <a href="mailto:launchgrid.hq@proton.me" class="text-honey hover:text-honey-light hover:underline break-all">launchgrid.hq@proton.me</a></p>
         <p>&copy; 2026 NeuralHive. All rights reserved.</p>
     </footer>
 
